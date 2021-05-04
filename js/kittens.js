@@ -113,7 +113,6 @@ class Engine {
     while (enemySpot === false || this.enemies[enemySpot]) {
       enemySpot = Math.floor(Math.random() * enemySpots);
     }
-    console.log(enemySpot);
     this.enemies[enemySpot] = new Enemy(enemySpot * ENEMY_WIDTH);
   }
 
@@ -188,6 +187,17 @@ class Engine {
 
   isPlayerDead() {
     // TODO: fix this function!
+    let enemiesLength = this.enemies.length;
+    for (let i = 0; i < enemiesLength; ++i) {
+      if (this.enemies[i] !== undefined) {
+        if (
+          this.enemies[i].x === this.player.x &&
+          this.enemies[i].y >= this.player.y - 10
+        ) {
+          return true;
+        }
+      }
+    }
     return false;
   }
 }
