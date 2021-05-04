@@ -212,12 +212,12 @@ class Engine {
       this.ctx.font = "bold 30px Impact";
       this.ctx.fillStyle = "#ffffff";
       this.ctx.fillText(this.score + " GAME OVER", 5, 30);
-      //   // Listen for keyboard space and restart game if clicked
-      //   document.addEventListener("keydown", (e) => {
-      //     if (e.keyCode === 32) {
-      //       this.start();
-      //     }
-      //   });
+      // Listen for keyboard space and restart game if clicked
+      document.addEventListener("keydown", (e) => {
+        if (e.keyCode === 32) {
+          window.location.reload(false);
+        }
+      });
     } else {
       // If player is not dead, then draw the score
       this.ctx.font = "bold 30px Impact";
