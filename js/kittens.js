@@ -17,6 +17,18 @@ var RIGHT_ARROW_CODE = 39;
 var MOVE_LEFT = "left";
 var MOVE_RIGHT = "right";
 
+// These two constants keep us from using "magic numbers" in our code
+var LEFT_ARROW_CODE = 37;
+var UP_ARROW_CODE = 38;
+var RIGHT_ARROW_CODE = 39;
+var DOWN_ARROW_CODE = 40;
+
+// These two constants allow us to DRY
+var MOVE_LEFT = "left";
+var MOVE_RIGHT = "right";
+var MOVE_UP = "up";
+var MOVE_DOWN = "down";
+
 // Preload game images
 var images = {};
 ["enemy.png", "stars.png", "player.png"].forEach((imgName) => {
@@ -62,7 +74,15 @@ class Player extends Entity {
       this.x = this.x - PLAYER_WIDTH;
     } else if (direction === MOVE_RIGHT && this.x < GAME_WIDTH - PLAYER_WIDTH) {
       this.x = this.x + PLAYER_WIDTH;
+    } else if (direction === MOVE_UP && this.y > 0) {
+      this.y = this.y - PLAYER_HEIGHT;
+    } else if (
+      direction === MOVE_DOWN &&
+      this.y < GAME_HEIGHT - PLAYER_HEIGHT
+    ) {
+      this.y = this.y + PLAYER_HEIGHT;
     }
+    console.log(this.x + " " + this.y);
   }
 }
 
@@ -129,6 +149,11 @@ class Engine {
       } else if (e.keyCode === RIGHT_ARROW_CODE) {
         this.player.move(MOVE_RIGHT);
       }
+      if (e.keyCode === UP_ARROW_CODE) {
+        this.player.move(MOVE_UP);
+      } else if (e.keyCode === DOWN_ARROW_CODE) {
+        this.player.move(MOVE_DOWN);
+      }
     });
 
     this.gameLoop();
@@ -193,13 +218,13 @@ class Engine {
   }
 
   isPlayerDead() {
-    // TODO: fix this function!
-    let enemiesLength = this.enemies.length;
-    for (let i = 0; i < enemiesLength; ++i) {
+    let len = this.enemies.length;
+    for (let i = 0; i < len; i++) {
       if (this.enemies[i] !== undefined) {
         if (
           this.enemies[i].x === this.player.x &&
-          this.enemies[i].y + ENEMY_HEIGHT >= this.player.y
+          this.enemies[i].y + ENEMY_HEIGHT >= this.player.y &&
+          this.enemies[i].y < this.player.y + PLAYER_HEIGHT
         ) {
           this.player.lives--;
           delete this.enemies[i];
