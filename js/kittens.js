@@ -212,7 +212,7 @@ class Engine {
       this.ctx.font = "bold 30px Impact";
       this.ctx.fillStyle = "#ffffff";
       this.ctx.fillText(this.score + " GAME OVER", 5, 30);
-      this.ctx.fillText("Press spacebar to restart", 35, 250);
+      this.ctx.fillText("Press spacebar to restart", 30, 250);
       // Listen for keyboard space and restart game if clicked
       document.addEventListener("keydown", (e) => {
         if (e.keyCode === 32) {
