@@ -53,6 +53,7 @@ class Player extends Entity {
     this.x = 2 * PLAYER_WIDTH;
     this.y = GAME_HEIGHT - PLAYER_HEIGHT - 10;
     this.sprite = images["player.png"];
+    this.lives = 3;
   }
 
   // This method is called by the game engine when left/right arrows are pressed
@@ -173,6 +174,12 @@ class Engine {
       this.ctx.font = "bold 30px Impact";
       this.ctx.fillStyle = "#ffffff";
       this.ctx.fillText(this.score + " GAME OVER", 5, 30);
+      //   // Listen for keyboard space and restart game if clicked
+      //   document.addEventListener("keydown", (e) => {
+      //     if (e.keyCode === 32) {
+      //       this.start();
+      //     }
+      //   });
     } else {
       // If player is not dead, then draw the score
       this.ctx.font = "bold 30px Impact";
@@ -194,7 +201,9 @@ class Engine {
           this.enemies[i].x === this.player.x &&
           this.enemies[i].y + ENEMY_HEIGHT >= this.player.y
         ) {
-          return true;
+          this.player.lives--;
+          delete this.enemies[i];
+          return this.player.lives === 0;
         }
       }
     }
