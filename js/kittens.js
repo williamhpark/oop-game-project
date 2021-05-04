@@ -44,19 +44,14 @@ class Entity {
 }
 
 class Enemy extends Entity {
-  constructor(xPos, score) {
+  constructor(xPos) {
     super();
     this.x = xPos;
     this.y = -ENEMY_HEIGHT;
     this.sprite = images["enemy.png"];
+
     // Each enemy should have a different speed
-    if (score >= 20000) {
-      this.speed = Math.random() / 2 + 1;
-    } else if (score >= 10000 && score < 20000) {
-      this.speed = Math.random() / 2 + 0.5;
-    } else {
-      this.speed = Math.random() / 2 + 0.25;
-    }
+    this.speed = Math.random() / 2 + 0.25;
   }
 
   update(timeDiff) {
@@ -87,6 +82,7 @@ class Player extends Entity {
     ) {
       this.y = this.y + PLAYER_HEIGHT;
     }
+    console.log(this.x + " " + this.y);
   }
 }
 
@@ -99,7 +95,7 @@ class Engine {
   constructor(element) {
     // Setup the player
     this.player = new Player();
-
+    this.escapePressed = false;
     // Setup enemies, making sure there are always three
     this.setupEnemies();
 
@@ -138,7 +134,7 @@ class Engine {
     while (enemySpot === false || this.enemies[enemySpot]) {
       enemySpot = Math.floor(Math.random() * enemySpots);
     }
-    this.enemies[enemySpot] = new Enemy(enemySpot * ENEMY_WIDTH, this.score);
+    this.enemies[enemySpot] = new Enemy(enemySpot * ENEMY_WIDTH);
   }
 
   // This method kicks off the game
@@ -168,7 +164,6 @@ class Engine {
     During each execution of the function, we will update the positions of all game entities
     It's also at this point that we will check for any collisions between the game entities
     Collisions will often indicate either a player death or an enemy kill
-
     In order to allow the game objects to self-determine their behaviors, gameLoop will call the `update` method of each entity
     To account for the fact that we don't always have 60 frames per second, gameLoop will send a time delta argument to `update`
     You should use this parameter to scale your update appropriately
@@ -189,12 +184,23 @@ class Engine {
     this.enemies.forEach((enemy) => enemy.render(this.ctx)); // draw the enemies
     this.player.render(this.ctx); // draw the player
 
+    document.addEventListener("keydown", (e) => {
+      if (e.keyCode === 65 && !this.escapePressed) {
+        this.escapePressed = true;
+        console.log(this.escapePressed);
+        this.enemies.forEach((enemy, enemyIdx) => {
+          delete this.enemies[enemyIdx];
+        });
+      }
+    });
+
     // Check if any enemies should die
     this.enemies.forEach((enemy, enemyIdx) => {
       if (enemy.y > GAME_HEIGHT) {
         delete this.enemies[enemyIdx];
       }
     });
+
     this.setupEnemies();
 
     // Check if player is dead
