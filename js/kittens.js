@@ -192,7 +192,7 @@ class Engine {
       if (this.enemies[i] !== undefined) {
         if (
           this.enemies[i].x === this.player.x &&
-          this.enemies[i].y >= this.player.y - 10
+          this.enemies[i].y + ENEMY_HEIGHT >= this.player.y
         ) {
           return true;
         }
