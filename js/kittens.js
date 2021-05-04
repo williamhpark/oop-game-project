@@ -44,14 +44,19 @@ class Entity {
 }
 
 class Enemy extends Entity {
-  constructor(xPos) {
+  constructor(xPos, score) {
     super();
     this.x = xPos;
     this.y = -ENEMY_HEIGHT;
     this.sprite = images["enemy.png"];
-
     // Each enemy should have a different speed
-    this.speed = Math.random() / 2 + 0.25;
+    if (score >= 20000) {
+      this.speed = Math.random() / 2 + 1;
+    } else if (score >= 10000 && score < 20000) {
+      this.speed = Math.random() / 2 + 0.5;
+    } else {
+      this.speed = Math.random() / 2 + 0.25;
+    }
   }
 
   update(timeDiff) {
@@ -82,7 +87,6 @@ class Player extends Entity {
     ) {
       this.y = this.y + PLAYER_HEIGHT;
     }
-    console.log(this.x + " " + this.y);
   }
 }
 
@@ -134,7 +138,7 @@ class Engine {
     while (enemySpot === false || this.enemies[enemySpot]) {
       enemySpot = Math.floor(Math.random() * enemySpots);
     }
-    this.enemies[enemySpot] = new Enemy(enemySpot * ENEMY_WIDTH);
+    this.enemies[enemySpot] = new Enemy(enemySpot * ENEMY_WIDTH, this.score);
   }
 
   // This method kicks off the game
@@ -210,6 +214,7 @@ class Engine {
       this.ctx.font = "bold 30px Impact";
       this.ctx.fillStyle = "#ffffff";
       this.ctx.fillText(this.score, 5, 30);
+      this.ctx.fillText("Lives: " + this.player.lives, 5, 70);
 
       // Set the time marker and redraw
       this.lastFrame = Date.now();
